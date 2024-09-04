@@ -17,6 +17,10 @@ var port = 8080;
 app.listen(port);
 console.log("App running in port " + port);
 
+// Enable CORS for all routes
+const cors = require('cors');
+app.use(cors()); 
+
 // Authentication Routes
 var AuthenticationRoutes=require('./routes/authenticationRoutes');
 app.use('/api/auth', AuthenticationRoutes);

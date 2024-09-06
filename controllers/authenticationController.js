@@ -8,7 +8,7 @@ const PersonModel = require('../models/personModel');
 const DriverModel = require('../models/driverModel');
 
 exports.register = async function(req,res){
-    const { username, password, idCard, licence, role } = req.body;
+    var { username, password, idCard, licence, role } = req.body;
     
     try {
         const exists = await checkExists(username, idCard, licence);
@@ -17,6 +17,9 @@ exports.register = async function(req,res){
         } else {
             try {
                 const idCreated = await savePerson(username, idCard, licence, role);
+                if(role=="employee"){
+                    licence = null;
+                }
                 await saveUser(username, password, idCard, licence, role, idCreated,'active');
                 res.status(201).json({ message: 'User registered successfully' });
             } catch(err){
@@ -40,15 +43,28 @@ exports.register = async function(req,res){
 }
 
 function checkExists(username, idCard, licence) {
-    return new Promise((resolve, reject) => {
-        db.get('SELECT * FROM users WHERE username = ? OR idCard = ? OR licence = ?', [username, idCard, licence], (err, row) => {
-            if (err) {
-                reject(err); 
-            } else {
-                resolve(!!row);
-            }
+    if(licence == ''){
+        return new Promise((resolve, reject) => {
+            db.get('SELECT * FROM users WHERE username = ? OR idCard = ?', [username, idCard], (err, row) => {
+                if (err) {
+                    reject(err); 
+                } else {
+                    resolve(!!row);
+                }
+            });
         });
-    });
+    } else {
+        return new Promise((resolve, reject) => {
+            db.get('SELECT * FROM users WHERE username = ? OR idCard = ? OR licence = ?', [username, idCard, licence], (err, row) => {
+                if (err) {
+                    reject(err); 
+                } else {
+                    resolve(!!row);
+                }
+            });
+        });
+    }
+    
 }
 
 async function savePerson(name, idCard, licence, role){

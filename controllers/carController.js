@@ -5,15 +5,15 @@ const CarOutputDTO = require('../DTO/carOutputDTO')
 
 exports.createCar = async function(req, res) {
     console.log("POST: /api/cars - " + JSON.stringify(req.body));
-    const { plate, date, ownerDL } = req.body;
+    const { plate, date, ownerLicence } = req.body;
 
     try {
-        const ownerDriver = await DriverModel.findOne({ licence: ownerDL });
+        const ownerDriver = await DriverModel.findOne({ licence: ownerLicence });
         if (!ownerDriver) {
             return res.status(404).json({ message: 'Driver not found' });
         }
 
-        const carInputDTO = new CarInputDTO(plate, parseDateString(date), ownerDL);
+        const carInputDTO = new CarInputDTO(plate, parseDateString(date), ownerLicence);
         const car = await carInputDTO.toCar(); 
 
         await car.save();
@@ -95,7 +95,7 @@ exports.getCarsByOwnerDriverLicence = async function(req, res) {
 
 exports.updateCar = async function(req, res) {
     console.log("PUT: /api/cars/" + req.params.id + " - " + JSON.stringify(req.body));
-    const { plate, date, ownerDL } = req.body;
+    const { plate, date, ownerLicence } = req.body;
 
     try {
         const car = await CarModel.findById(req.params.id).populate('owner');
@@ -103,7 +103,7 @@ exports.updateCar = async function(req, res) {
             return res.status(404).json({ message: 'Car not found' });
         }
 
-        const ownerDriver = await DriverModel.findOne({ licence: ownerDL });
+        const ownerDriver = await DriverModel.findOne({ licence: ownerLicence });
         if (!ownerDriver) {
             return res.status(404).json({ message: 'Driver not found' });
         }

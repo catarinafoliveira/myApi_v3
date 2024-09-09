@@ -52,8 +52,8 @@ exports.getPersonById = async function(req, res) {
 exports.getPersonByName = async function(req, res) {
     console.log("GET: /api/persons by Name: " + req.params.name);
     try {
-        const persons = await PersonModel.find({ name: req.params.name });
-        res.status(200).json(persons);
+        const person = await PersonModel.findOne({ name: req.params.name });
+        res.status(200).json(person);
     } catch (err) {
         res.status(500).json({ error: 'Error retrieving persons', details: err });
     }

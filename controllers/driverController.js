@@ -55,8 +55,8 @@ exports.getDriverById = async function(req, res) {
 exports.getDriverByName = async function(req, res) {
     console.log("GET: /api/drivers by Name: " + req.params.name);
     try {
-        const drivers = await DriverModel.find({ name: req.params.name });
-        res.status(200).json(drivers);
+        const driver = await DriverModel.findOne({ name: req.params.name });
+        res.status(200).json(driver);
     } catch (err) {
         res.status(500).json({ error: 'Error retrieving drivers', details: err });
     }

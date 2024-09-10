@@ -97,32 +97,31 @@ exports.login = async function(req,res){
         if (user) {
             if(user.status!='active'){
                 res.status(401).json({ error: 'Inactive user'});
-            }
-            const hashedPasswordFromDB = user.password; 
-            
-            const passwordsMatch = await comparePasswords(password, hashedPasswordFromDB);
-            if (passwordsMatch) {
-                const authData = { 
-                    username: user.username,
-                    userRole: user.role,
-                    idCard: user.idCard,
-                    licence: user.licence,
-                    id: user.personId 
-                };
-                
-                const token = jwt.sign(authData, keyFile.securekey , { expiresIn: '1h' });
-                
-                res.send({
-                    userToken: token 
-                });
             } else {
-                res.status(401).json({ error: 'Incorrect username or password'});
-            }    
+                const hashedPasswordFromDB = user.password; 
+            
+                const passwordsMatch = await comparePasswords(password, hashedPasswordFromDB);
+                if (passwordsMatch) {
+                    const authData = { 
+                        username: user.username,
+                        userRole: user.role,
+                        idCard: user.idCard,
+                        licence: user.licence,
+                        id: user.personId 
+                    };
+                    
+                    const token = jwt.sign(authData, keyFile.securekey , { expiresIn: '1h' });
+                    
+                    res.status(200).json({ userToken: token });
+                } else {
+                    res.status(401).json({ error: 'Incorrect username or password'});
+                } 
+            }
         } else {
             res.status(401).json({ error: 'User not found'});
         }
     } catch(error) {
-        res.send(error);
+        res.status(500).json({error: error});
     }
 }
 

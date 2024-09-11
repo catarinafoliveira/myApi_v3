@@ -39,7 +39,7 @@ const verifyToken = (req, res, next) => {
                 }
             } else if(req.baseUrl === '/api/cars'){
                 if(req.method === 'POST'){
-                    if(decodedUser.licence==req.body.ownerDL){
+                    if(decodedUser.licence==req.body.ownerLicence){
                         return next();
                     }
                 } else if(req.method === 'GET'){

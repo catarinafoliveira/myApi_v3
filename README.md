@@ -110,3 +110,5 @@ Employees are allowed to access all routes. Drivers are only allowed some of the
 | `GET`    | /api/cars/owner/:dl | Get a car by owner driver's licence | If :dl is the user's driver's licence |
 | `PUT`    | /api/cars/:id | Edit a car |&cross;|
 | `DELETE` | /api/cars/:id | Delete a car |&cross;|
+
+Teste
